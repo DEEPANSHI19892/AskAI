@@ -4,7 +4,7 @@ import google.generativeai as genai
 
 
 # Gemini Setup
-API_KEY = "st.secrets["GEMINI_API_KEY"]"
+API_KEY = st.secrets["GEMINI_API_KEY"]
 
 genai.configure(api_key=API_KEY)
 
