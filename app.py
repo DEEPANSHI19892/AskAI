@@ -24,14 +24,14 @@ model = genai.GenerativeModel(
 # ----------------------------
 
 st.set_page_config(
-    page_title="AskAI | Intelligent AI Chat Assistant",
+    page_title="AskAI | Intelligent AI Assistant",
     page_icon="💬",
     layout="centered"
 )
 
 
 # ----------------------------
-# Custom Styling
+# Custom UI Styling
 # ----------------------------
 
 st.markdown(
@@ -39,41 +39,56 @@ st.markdown(
     <style>
 
     .block-container {
-        padding-top: 2rem;
-        padding-bottom: 1rem;
         max-width: 850px;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
     }
 
 
-    h1 {
-        text-align: center;
-        font-size: 42px;
-        margin-bottom: 5px;
+    .title {
+        text-align:center;
+        font-size:48px;
+        font-weight:700;
+        margin-bottom:0px;
     }
 
 
-    .subtitle {
-        text-align: center;
-        font-size: 18px;
-        opacity: 0.75;
-        margin-bottom: 25px;
+    .tagline {
+        text-align:center;
+        font-size:18px;
+        opacity:0.7;
+        margin-bottom:30px;
     }
 
 
-    .welcome-box {
+    .welcome-card {
 
-        padding: 15px;
-        border-radius: 12px;
+        padding:22px;
 
-        background-color: rgba(128,128,128,0.10);
+        border-radius:18px;
 
-        border: 1px solid rgba(128,128,128,0.25);
+        background: rgba(128,128,128,0.08);
 
-        text-align: center;
+        border:1px solid rgba(128,128,128,0.25);
 
-        line-height: 1.5;
+        margin-bottom:25px;
 
-        margin-bottom: 20px;
+    }
+
+
+    .feature {
+
+        padding:8px 0px;
+
+        font-size:16px;
+
+    }
+
+
+    .stChatMessage {
+
+        border-radius:15px;
+
     }
 
 
@@ -88,12 +103,14 @@ st.markdown(
 # Header
 # ----------------------------
 
-st.title("AskAI")
-
 st.markdown(
     """
-    <div class="subtitle">
-    Your intelligent AI assistant for everyday questions.
+    <div class="title">
+    AskAI ✨
+    </div>
+
+    <div class="tagline">
+    Your intelligent AI assistant for questions, learning, and creativity.
     </div>
     """,
     unsafe_allow_html=True
@@ -102,7 +119,7 @@ st.markdown(
 
 
 # ----------------------------
-# Chat Memory
+# Memory
 # ----------------------------
 
 if "messages" not in st.session_state:
@@ -119,19 +136,18 @@ if len(st.session_state.messages) == 0:
 
     st.markdown(
         """
-        <div class="welcome-box">
+        <div class="welcome-card">
 
         👋 <b>Welcome to AskAI</b>
 
         <br><br>
 
-        Ask questions about coding, learning, writing, and more.
+        Start a conversation:
 
-        <br><br>
-
-        • Natural conversations  
-        • Clear explanations  
-        • Multi-topic assistance
+        <div class="feature">💻 Explain coding concepts</div>
+        <div class="feature">📚 Learn new topics</div>
+        <div class="feature">✍️ Write and improve content</div>
+        <div class="feature">💡 Ask any question</div>
 
         </div>
         """,
@@ -141,14 +157,28 @@ if len(st.session_state.messages) == 0:
 
 
 # ----------------------------
-# Display Chat History
+# Clear Chat Button
+# ----------------------------
+
+if len(st.session_state.messages) > 0:
+
+    if st.button("🗑️ Clear Conversation"):
+
+        st.session_state.messages = []
+
+        st.rerun()
+
+
+
+# ----------------------------
+# Chat History
 # ----------------------------
 
 for message in st.session_state.messages:
 
     with st.chat_message(message["role"]):
 
-        st.write(message["content"])
+        st.markdown(message["content"])
 
 
 
@@ -157,7 +187,7 @@ for message in st.session_state.messages:
 # ----------------------------
 
 question = st.chat_input(
-    "Ask me anything..."
+    "Ask anything..."
 )
 
 
@@ -167,20 +197,20 @@ if question:
 
     st.session_state.messages.append(
         {
-            "role": "user",
-            "content": question
+            "role":"user",
+            "content":question
         }
     )
 
 
     with st.chat_message("user"):
 
-        st.write(question)
+        st.markdown(question)
 
 
 
     # ----------------------------
-    # Generate AI Response
+    # AI Response
     # ----------------------------
 
     with st.chat_message("assistant"):
@@ -190,21 +220,24 @@ if question:
             try:
 
                 prompt = f"""
-You are AskAI, a natural conversational AI assistant.
+You are AskAI, a helpful AI assistant.
 
-Answer like a helpful human assistant.
+Your goal is to give clear, simple, human-like answers.
 
-Rules:
-- Give the answer directly first.
-- Keep normal answers around 5-10 lines.
-- Give longer answers only when the user asks for details, steps, deep explanation, or complete guides.
-- Do not start with phrases like "That's a great question", "Certainly", or similar expressions.
-- Do not sound robotic or like a textbook.
-- Avoid unnecessary headings.
-- Use bullet points only when useful.
-- Match the user's understanding level.
-- Explain technical topics simply with examples.
-- Keep simple questions simple.
+Response style:
+- Start with the direct answer.
+- Keep normal answers concise.
+- Use bullet points for important points.
+- Avoid unnecessary long paragraphs.
+- Avoid robotic phrases.
+- Explain difficult concepts simply.
+- Give examples when useful.
+- Give detailed answers only when requested.
+
+Answer format:
+- Short explanation first.
+- Key points if needed.
+- Example if useful.
 
 User question:
 {question}
@@ -215,7 +248,7 @@ User question:
 
                 answer = response.text
 
-                st.write(answer)
+                st.markdown(answer)
 
 
             except Exception:
@@ -225,13 +258,13 @@ User question:
                     "Please try again."
                 )
 
-                st.write(answer)
+                st.markdown(answer)
 
 
 
     st.session_state.messages.append(
         {
-            "role": "assistant",
-            "content": answer
+            "role":"assistant",
+            "content":answer
         }
     )
