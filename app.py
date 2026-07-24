@@ -11,7 +11,11 @@ API_KEY = st.secrets["GEMINI_API_KEY"]
 genai.configure(api_key=API_KEY)
 
 model = genai.GenerativeModel(
-    "gemini-2.5-flash"
+    model_name="gemini-2.5-flash",
+    generation_config={
+        "temperature": 0.7,
+        "max_output_tokens": 800
+    }
 )
 
 
@@ -38,12 +42,10 @@ st.markdown(
         background-color: #f8f9fa;
     }
 
-
     h1 {
         text-align: center;
         font-size: 42px;
     }
-
 
     .subtitle {
         text-align: center;
@@ -52,20 +54,20 @@ st.markdown(
         margin-bottom: 25px;
     }
 
-
     .welcome-box {
-        padding: 20px;
+        padding: 18px;
         border-radius: 12px;
-        background-color: #ffffff;
+        background-color: white;
         border: 1px solid #ddd;
         margin-top: 20px;
+        text-align: center;
+        line-height: 1.6;
     }
 
     </style>
     """,
     unsafe_allow_html=True
 )
-
 
 
 # ----------------------------
@@ -78,19 +80,16 @@ with st.sidebar:
 
     st.write(
         """
-        Your simple AI assistant for:
+        AI assistant for:
 
         • Coding
         • Learning
         • Writing
-        • General Questions
-        • Problem Solving
+        • General questions
         """
     )
 
-
     st.divider()
-
 
     if st.button("Clear Chat"):
 
@@ -105,7 +104,6 @@ with st.sidebar:
 # ----------------------------
 
 st.title("AskAI")
-
 
 st.markdown(
     """
@@ -138,17 +136,15 @@ if len(st.session_state.messages) == 0:
         """
         <div class="welcome-box">
 
-        👋 Welcome to AskAI!
+        👋 Welcome to AskAI
 
-        You can ask me about:
+        <br>
 
-        - Programming and technology
-        - Science and mathematics
-        - Writing and communication
-        - General knowledge
-        - Everyday questions
+        Your AI assistant for coding, learning, writing, and everyday questions.
 
-        I will provide clear and natural answers.
+        <br>
+
+        Ask anything and get clear, natural answers.
 
         </div>
         """,
@@ -182,7 +178,7 @@ question = st.chat_input(
 if question:
 
 
-    # Store user message
+    # Save user message
 
     st.session_state.messages.append(
         {
@@ -198,32 +194,30 @@ if question:
 
 
 
-    # Generate AI Response
+    # Generate AI response
 
     with st.chat_message("assistant"):
 
-
         with st.spinner("Thinking..."):
-
 
             try:
 
                 prompt = f"""
-You are AskAI, a smart conversational AI assistant.
+You are AskAI, a natural conversational AI assistant.
 
-Your goal:
-Provide natural, human-like answers.
+Answer like a helpful human assistant.
 
 Rules:
-- Answer directly first.
-- Keep simple questions short.
-- Give detailed explanations only when required.
-- Do not use phrases like "That's a fantastic question".
+- Give the answer directly first.
+- Keep normal answers around 5-10 lines.
+- Give longer answers only when the user asks for details, steps, deep explanation, or a complete guide.
+- Do not start with phrases like "That's a great question", "Certainly", or similar expressions.
 - Do not sound robotic or like a textbook.
 - Avoid unnecessary headings.
-- Use a friendly conversational tone.
-- Explain technical concepts clearly with examples.
-- Adapt your response style based on the user's question.
+- Use bullet points only when they improve clarity.
+- Match the user's level of understanding.
+- Explain technical topics simply with examples.
+- Keep simple questions simple.
 
 User question:
 {question}
@@ -232,18 +226,15 @@ User question:
 
                 response = model.generate_content(prompt)
 
-
                 answer = response.text
-
 
                 st.write(answer)
 
 
-
-            except Exception as e:
+            except Exception:
 
                 answer = (
-                    "Sorry, I could not generate a response right now. "
+                    "Sorry, I couldn't generate a response right now. "
                     "Please try again."
                 )
 
@@ -251,7 +242,7 @@ User question:
 
 
 
-    # Store AI response
+    # Save assistant message
 
     st.session_state.messages.append(
         {
