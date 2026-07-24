@@ -38,64 +38,49 @@ st.markdown(
     """
     <style>
 
-    .main {
-        background-color: #f8f9fa;
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 1rem;
+        max-width: 850px;
     }
+
 
     h1 {
         text-align: center;
         font-size: 42px;
+        margin-bottom: 5px;
     }
+
 
     .subtitle {
         text-align: center;
-        color: #555;
         font-size: 18px;
+        opacity: 0.75;
         margin-bottom: 25px;
     }
 
+
     .welcome-box {
-        padding: 18px;
+
+        padding: 15px;
         border-radius: 12px;
-        background-color: white;
-        border: 1px solid #ddd;
-        margin-top: 20px;
+
+        background-color: rgba(128,128,128,0.10);
+
+        border: 1px solid rgba(128,128,128,0.25);
+
         text-align: center;
-        line-height: 1.6;
+
+        line-height: 1.5;
+
+        margin-bottom: 20px;
     }
+
 
     </style>
     """,
     unsafe_allow_html=True
 )
-
-
-# ----------------------------
-# Sidebar
-# ----------------------------
-
-with st.sidebar:
-
-    st.header("AskAI")
-
-    st.write(
-        """
-        AI assistant for:
-
-        • Coding
-        • Learning
-        • Writing
-        • General questions
-        """
-    )
-
-    st.divider()
-
-    if st.button("Clear Chat"):
-
-        st.session_state.messages = []
-
-        st.rerun()
 
 
 
@@ -108,7 +93,7 @@ st.title("AskAI")
 st.markdown(
     """
     <div class="subtitle">
-    Ask anything. Get clear, natural, and intelligent answers.
+    Your intelligent AI assistant for everyday questions.
     </div>
     """,
     unsafe_allow_html=True
@@ -127,7 +112,7 @@ if "messages" not in st.session_state:
 
 
 # ----------------------------
-# Welcome Message
+# Welcome Screen
 # ----------------------------
 
 if len(st.session_state.messages) == 0:
@@ -136,15 +121,17 @@ if len(st.session_state.messages) == 0:
         """
         <div class="welcome-box">
 
-        👋 Welcome to AskAI
+        👋 <b>Welcome to AskAI</b>
 
-        <br>
+        <br><br>
 
-        Your AI assistant for coding, learning, writing, and everyday questions.
+        Ask questions about coding, learning, writing, and more.
 
-        <br>
+        <br><br>
 
-        Ask anything and get clear, natural answers.
+        • Natural conversations  
+        • Clear explanations  
+        • Multi-topic assistance
 
         </div>
         """,
@@ -178,8 +165,6 @@ question = st.chat_input(
 if question:
 
 
-    # Save user message
-
     st.session_state.messages.append(
         {
             "role": "user",
@@ -194,7 +179,9 @@ if question:
 
 
 
-    # Generate AI response
+    # ----------------------------
+    # Generate AI Response
+    # ----------------------------
 
     with st.chat_message("assistant"):
 
@@ -210,12 +197,12 @@ Answer like a helpful human assistant.
 Rules:
 - Give the answer directly first.
 - Keep normal answers around 5-10 lines.
-- Give longer answers only when the user asks for details, steps, deep explanation, or a complete guide.
+- Give longer answers only when the user asks for details, steps, deep explanation, or complete guides.
 - Do not start with phrases like "That's a great question", "Certainly", or similar expressions.
 - Do not sound robotic or like a textbook.
 - Avoid unnecessary headings.
-- Use bullet points only when they improve clarity.
-- Match the user's level of understanding.
+- Use bullet points only when useful.
+- Match the user's understanding level.
 - Explain technical topics simply with examples.
 - Keep simple questions simple.
 
@@ -241,8 +228,6 @@ User question:
                 st.write(answer)
 
 
-
-    # Save assistant message
 
     st.session_state.messages.append(
         {
